@@ -1,0 +1,19 @@
+{
+	"name": "Secure Session Manager",
+	"version": "1",
+	"manifest_version": 2,
+	"content_security_policy": "script-src 'unsafe-eval'; object-src 'self'",
+	"description": "Make the all web sites secure",
+	"permissions": ["<all_urls>"],
+	"background": {
+		"scripts": ["js/sesshandler.js"]
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://*/*"],
+			"js": ["js/jquery-2.0.3.min.js", "js/script.js"]
+			"run_at": "document_start",
+			"all_frames": true
+		}
+	]
+}
