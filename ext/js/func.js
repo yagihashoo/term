@@ -1,41 +1,48 @@
-function isPrime(n, k) {
-	if(typeof k === "undefined")
-		k = 50;
-	
-	with(Math) {
-		n = abs(n);
-		
-		if(n == 2 || n < 2 || n & 1 == 0)
-			return false;
-
-		var d = (n - 1) >> 1;
-		while(d & 1 == 0)
-			d = d >> 1;
-
-		for(var i = 0; i < k; i++) {
-			var a = (random() * (n - 1)) | 0;
-			var t = d;
-			// var y = pow(a, t) % n;
-			var y = myPow(a, t, n);
-
-			while(t != n - 1 && y != 1 && y != n - 1) {
-				// y = pow(y, 2) % n;
-				y = myPow(y, 2, n);
-				t = t << 1;
-			}
-			if(y != n - 1 && t & 1 == 0)
-				return false;
-		}
-		return true;
-	}
-
-	function myPow(a, b, c) {
-		console.log("a " + a);
-		console.log("b " + b);
-		var m = Math.pow(a, b);
-		console.log("m " + m);
-		return m % c;
-	}
+/*
+ * http://rosettacode.org/wiki/Miller-Rabin_primality_test#JavaScript
+ * からコピペ
+ * 2**53くらいまではいけるらしい
+ * だいたい15桁くらいまでは大丈夫？
+ */
+function modProd(a, b, n) {
+  if (b == 0)
+    return 0;
+  if (b == 1)
+    return a % n;
+  return (modProd(a, (b - b % 10) / 10, n) * 10 + (b % 10) * a) % n;
 }
 
-console.log(isPrime(8911));
+function modPow(a, b, n) {
+  if (b == 0)
+    return 1;
+  if (b == 1)
+    return a % n;
+  if (b % 2 == 0) {
+    var c = modPow(a, b / 2, n);
+    return modProd(c, c, n);
+  }
+  return modProd(a, modPow(a, b - 1, n), n);
+}
+
+function isPrime(n) {
+  if (n == 2 || n == 3 || n == 5)
+    return true;
+  if (n % 2 == 0 || n % 3 == 0 || n % 5 == 0)
+    return false;
+  if (n < 25)
+    return true;
+  for (var a = [2, 3, 5, 7, 11, 13, 17, 19], b = n - 1, d, t, i, x; b % 2 == 0; b /= 2);
+  for ( i = 0; i < a.length; i++) {
+    x = modPow(a[i], b, n);
+    if (x == 1 || x == n - 1)
+      continue;
+    for ( t = true, d = b; t && d < n - 1; d *= 2) {
+      x = modProd(x, x, n);
+      if (x == n - 1)
+        t = false;
+    }
+    if (t)
+      return false;
+  }
+  return true;
+}
