@@ -1,3 +1,9 @@
+String.prototype.repeat = function(n) {
+  for(var str = "", i = 0; i < n; i++)
+    str += this;
+  return str;
+};
+
 /*
  * http://rosettacode.org/wiki/Miller-Rabin_primality_test#JavaScript
  * からコピペ
@@ -46,3 +52,18 @@ function isPrime(n) {
   }
   return true;
 }
+
+function getPrime(l) {
+	if(typeof l === "undefined")
+		l = 9;
+
+  with(Math) {
+    l = parseInt("1" + "0".repeat(l));
+    var n = 0;
+    while(!isPrime(n) && n.toString().length != 8) {
+      n = floor(random()*l);
+    }
+    return n;
+  }
+}
+
