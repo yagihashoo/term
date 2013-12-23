@@ -1,0 +1,43 @@
+@charset "utf-8";
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+body#login h1 {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+body#login form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform-origin: 100% 100%;
+  -moz-transform-origin: 100% 100%;
+  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+  -moz-transform: translate(-50%,-50%);
+  text-align: center;
+  display: block;
+  width: 240px;
+  height: 240px;
+  border: double 1px #FFF;
+  border-radius: 10px;
+  background-color: #FAFAFA;
+  box-shadow: 0 0 10px 10px #DFDFDF;
+  padding: 30px;
+  font-size: 20px;
+}
+
+body#login form input[type=text], body#login form input[type=password] {
+  display: block;
+  font-size: 16px;
+  margin: auto;
+  margin-bottom: 10px;
+}
