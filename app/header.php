@@ -14,4 +14,8 @@ if (!isset($_SESSION["name"])) {
   session_regenerate_id(true);
 }
 
+/**
+ * Secure-session headers
+ */
 header("Secure-Session: 1");
+header("Secure-Session-Ex: /dhke.php");
