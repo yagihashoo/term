@@ -45,14 +45,24 @@ bool isPrime(mp::int1024_t n)
   return mp::miller_rabin_test(n, 50, gen);
 }
 
-mp::int1024_t getRand()
+mp::int1024_t getRand(int l)
 {
   stringstream ss;
   string num = "";
-  for(int i = 0; i < 2; i++) {
-    unsigned int r = arc4random();
+
+  std::size_t seed = time(NULL);
+  boost::random::mt19937 gen(time(NULL));
+  boost::random::uniform_int_distribution<> dist(0, 9);
+
+  for(int i = 0; i < l; i++) {
+    seed = time(NULL);
+    unsigned int r = dist(gen);
+    while(r == 0 && i == 0)
+      r = dist(gen);
     ss << r;
     num += ss.str();
+
+    // gen.seed(seed);
   }
   return toInt(num);
 }
@@ -60,8 +70,7 @@ mp::int1024_t getRand()
 string getPrime()
 {
   while(true) {
-    mp::int1024_t num = getRand();
-    // cout << toString(num)+"\n";
+    mp::int1024_t num = getRand(5);
     if(isPrime(num))
       return toString(num);
   }
@@ -69,8 +78,8 @@ string getPrime()
 
 int main()
 {
-  string n = getPrime();
-  mp::int1024_t r = getRand();
-  cout << n;
+  // string n = getPrime();
+  mp::int1024_t r = getRand(5);
+  cout << toString(r);
   return 0;
 }
