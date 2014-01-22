@@ -9,6 +9,7 @@
 #include <boost/multiprecision/miller_rabin.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random.hpp>
+#include <emscripten.h>
 
 namespace mp = boost::multiprecision;
 using namespace std;
@@ -50,36 +51,34 @@ mp::int1024_t getRand(int l)
   stringstream ss;
   string num = "";
 
-  std::size_t seed = time(NULL);
-  boost::random::mt19937 gen(time(NULL));
-  boost::random::uniform_int_distribution<> dist(0, 9);
-
   for(int i = 0; i < l; i++) {
-    seed = time(NULL);
-    unsigned int r = dist(gen);
+    unsigned int r = rand() % 10;
     while(r == 0 && i == 0)
-      r = dist(gen);
+      r = rand() % 10;
     ss << r;
-    num += ss.str();
-
-    // gen.seed(seed);
   }
-  return toInt(num);
+  return toInt(ss.str());
 }
 
 string getPrime()
 {
+  srand(time(NULL));
   while(true) {
-    mp::int1024_t num = getRand(5);
+    mp::int1024_t num = getRand(20);
     if(isPrime(num))
       return toString(num);
   }
 }
 
+string getRandForDH()
+{
+  srand(time(NULL));
+  return toString(rand());
+}
+
 int main()
 {
-  // string n = getPrime();
-  mp::int1024_t r = getRand(5);
-  cout << toString(r);
+  string hoge = getRandForDH();
+  string fuga = getPrime();
   return 0;
 }
