@@ -10,33 +10,37 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random.hpp>
 #include <emscripten.h>
+#include <emscripten/bind.h>
 
 namespace mp = boost::multiprecision;
-using namespace std;
 using namespace boost;
+using namespace emscripten;
 
 template <typename T>
-string toString(const T& t)
+std::string toString(const T& t)
 {
-  ostringstream ss;
+  std::stringstream ss;
   ss << t;
   return ss.str();
 }
 
-mp::int1024_t toInt(string n)
+mp::int1024_t toInt(std::string n)
 {
-  string input(n);
+  std::string input(n);
   mp::int1024_t output;
-  istringstream sin(input);
+  std::stringstream sin(input);
   sin >> output;
   return output;
 }
 
-mp::int1024_t myPow(mp::int1024_t m, mp::int1024_t k)
+extern mp::int1024_t modPow(mp::int1024_t M, mp::int1024_t K, mp::int1024_t P)
 {
-  mp::int1024_t rslt = m;
-  for(mp::int1024_t i = 0, c = k -1; i < c; i++)
-    rslt *= m;
+  mp::int1024_t rslt = 1;
+  while(K > 0) {
+    if((K & 1) == 1) rslt = (rslt * M) % P;
+    K >>= 1;
+    M = (M * M) % P;
+  }
   return rslt;
 }
 
@@ -48,9 +52,8 @@ bool isPrime(mp::int1024_t n)
 
 mp::int1024_t getRand(int l)
 {
-  stringstream ss;
-  string num = "";
-
+  std::stringstream ss;
+  std::string num = "";
   for(int i = 0; i < l; i++) {
     unsigned int r = rand() % 10;
     while(r == 0 && i == 0)
@@ -60,7 +63,7 @@ mp::int1024_t getRand(int l)
   return toInt(ss.str());
 }
 
-string getPrime()
+extern std::string getPrime()
 {
   srand(time(NULL));
   while(true) {
@@ -70,15 +73,34 @@ string getPrime()
   }
 }
 
-string getRandForDH()
+extern std::string getRandForDH()
 {
-  srand(time(NULL));
-  return toString(rand());
+  return toString(getRand(10));
 }
 
-int main()
+// G^A mod P あるいは G^B mod Pを生成するための関数
+extern std::string getMsg(std::string R, std::string P)
 {
-  string hoge = getRandForDH();
-  string fuga = getPrime();
-  return 0;
+  return toString(modPow(2, toInt(R), toInt(P)));
+}
+
+// 受け取ったメッセージ^自分で生成した乱数 mod Pで鍵を得る
+extern std::string makeKey(std::string msg, std::string r, std::string p)
+{
+  mp::int1024_t MSG = toInt(msg), R = toInt(r), P = toInt(p);
+  return toString(modPow(MSG, R, P));
+}
+
+extern std::string modPowLink(std::string m, std::string k, std::string p)
+{
+  mp::int1024_t M = toInt(m), K = toInt(k), P = toInt(p);
+  return toString(modPow(M, K, P));
+}
+
+EMSCRIPTEN_BINDINGS(module) {
+  function("getPrime", &getPrime);
+  function("getRandForDH", &getRandForDH);
+  function("getMsg", &getMsg);
+  function("modPow", &modPowLink);
+  function("makeKey", &makeKey);
 }
