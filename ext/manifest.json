@@ -11,7 +11,7 @@
 	"content_scripts": [
 		{
 			"matches": ["*://*/*"],
-			"js": ["js/func.js", "js/script.js"]
+			"js": ["js/lib.js", "js/func.js", "js/script.js"]
 			"run_at": "document_start",
 			"all_frames": true
 		}
