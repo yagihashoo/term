@@ -4,14 +4,14 @@
 	"manifest_version": 2,
 	"content_security_policy": "script-src 'unsafe-eval'; object-src 'self'",
 	"description": "Make the all web sites secure",
-	"permissions": ["<all_urls>"],
+	"permissions": ["webRequest", "<all_urls>"],
 	"background": {
-		"scripts": ["js/sesshandler.js"]
+		"scripts": ["js/lib.js", "js/func.js", "js/sesshandler.js"]
 	},
 	"content_scripts": [
 		{
 			"matches": ["*://*/*"],
-			"js": ["js/lib.js", "js/func.js", "js/script.js"]
+			"js": ["js/lib.js", "js/func.js", "js/script.js"],
 			"run_at": "document_start",
 			"all_frames": true
 		}
