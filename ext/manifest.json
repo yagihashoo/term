@@ -2,11 +2,11 @@
 	"name": "Secure Session Manager",
 	"version": "1",
 	"manifest_version": 2,
-	"content_security_policy": "script-src 'unsafe-eval'; object-src 'self'",
+	"content_security_policy": "default-src 'self' 'unsafe-eval' http://localhost",
 	"description": "Make the all web sites secure",
-	"permissions": ["webRequest", "storage", "<all_urls>"],
+	"permissions": ["webRequest", "storage", "<all_urls>", "http://*/", "https://*/", "http://localhost/"],
 	"background": {
-		"scripts": ["js/jssha256.js", "js/base64.js", "js/lib.js", "js/func.js", "js/sesshandler.js"]
+		"scripts": ["js/jquery-2.0.3.min.js", "js/jssha256.js", "js/base64.js", "js/lib.js", "js/func.js", "js/sesshandler.js"]
 	},
 	"content_scripts": [
 		{

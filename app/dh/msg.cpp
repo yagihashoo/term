@@ -96,6 +96,7 @@ extern std::string modPowLink(std::string m, std::string k, std::string p)
 
 int main()
 {
+  srand(time(NULL));
   std::string rnd = getRandForDH();
   std::string prm = getPrime();
   std::string msg = getMsg(rnd, prm);
@@ -103,5 +104,7 @@ int main()
   std::cout << prm;
   std::cout << ":";
   std::cout << msg;
+  std::cout << ",";
+  std::cout << rnd;
   return 0;
 }

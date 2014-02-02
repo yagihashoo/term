@@ -18,4 +18,4 @@ if (!isset($_SESSION["name"])) {
  * Secure-session headers
  */
 header("Secure-Session: 1");
-header("Secure-Session-Ex: /dhke.php");
+header("Secure-Session-Ex: http://localhost/term/dhke.php");

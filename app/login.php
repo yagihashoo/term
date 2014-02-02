@@ -15,7 +15,7 @@ if (!isset($_SESSION["name"])) {
 }
 
 header("Secure-Session: 1");
-header("Secure-Session-Ex: /dhke.php");
+header("Secure-Session-Ex: http://localhost/term/dhke.php");
 
 if(isset($_SESSION["name"]))
   header("Location: " . $wd . "/");
