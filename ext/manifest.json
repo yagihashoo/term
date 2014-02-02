@@ -4,9 +4,9 @@
 	"manifest_version": 2,
 	"content_security_policy": "script-src 'unsafe-eval'; object-src 'self'",
 	"description": "Make the all web sites secure",
-	"permissions": ["webRequest", "<all_urls>"],
+	"permissions": ["webRequest", "storage", "<all_urls>"],
 	"background": {
-		"scripts": ["js/lib.js", "js/func.js", "js/sesshandler.js"]
+		"scripts": ["js/jssha256.js", "js/base64.js", "js/lib.js", "js/func.js", "js/sesshandler.js"]
 	},
 	"content_scripts": [
 		{

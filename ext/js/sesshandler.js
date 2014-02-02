@@ -8,7 +8,7 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
   if(getHeader("Secure-Session", headers)
      && getHeader("Secure-Session", headers).value === "1") {
     var useSecureSession = true;
-    var 
+    var dhke = getHeader("Secure-Session-Ex", headers).value;
   } else {
     return;
   }
@@ -16,3 +16,9 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
   console.log(useSecureSession);
 }, {urls:["<all_urls>"]}
 ,["responseHeaders"]);
+
+console.log(chrome.storage.local);
+chrome.storage.local.set({"hoge": "fuga"});
+chrome.storage.local.get("hoge", function(result) {
+  console.log(result);
+});
