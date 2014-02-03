@@ -96,9 +96,10 @@ extern std::string modPowLink(std::string m, std::string k, std::string p)
 
 int main(int argc, char *argv[])
 {
-  std::string rnd = getRandForDH();
-  std::string prm = argv[1];
-  std::string msg = argv[2];
+  srand(time(NULL));
+  std::string msg = argv[1];
+  std::string rnd = argv[2];
+  std::string prm = argv[3];
   std::string key = makeKey(msg, rnd, prm);
   std::cout << key;
   return 0;

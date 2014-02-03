@@ -1,12 +1,52 @@
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
-  // console.log(details);
+  if (details.type === "main_frame") {
+    var key = "";
+    chrome.storage.local.get("key", function(result) {
+      if (result.key !== undefined)
+        key = result.key;
+    });
+
+    var cookie = "";
+    for (o in details.requestHeaders) {
+      if (details.requestHeaders[o].name === "Cookie")
+        cookie = details.requestHeaders[o].value;
+    }
+
+    HMAC_SHA256_init(key);
+    HMAC_SHA256_write(cookie);
+    var array_hash = HMAC_SHA256_finalize();
+
+    var str_hash = "";
+    for (var i = 0; i < array_hash.length; i++) {
+      str_hash += String.fromCharCode(array_hash[i]);
+    }
+    var signature = Base64.encode(str_hash);
+
+    details.requestHeaders.push({
+      name : "Secure-Session-Signature",
+      value : signature
+    });
+    console.log(details);
+    return {
+      requestHeaders : details.requestHeaders
+    };
+  }
 }, {
-  urls : ["<all_urls>"]
-}, ["requestHeaders"]);
+  urls : ["<all_urls>"],
+  types : ["main_frame"]
+}, ["requestHeaders", "blocking"]);
 
 chrome.webRequest.onHeadersReceived.addListener(function(details) {
   var headers = details.responseHeaders;
   if (getHeader("Secure-Session", headers) && getHeader("Secure-Session", headers).value === "1") {
+    var isKeySet = true;
+    chrome.storage.local.get("key", function(result) {
+      if (result.key === undefined)
+        isKeySet = false;
+    });
+    if (isKeySet)
+      return;
+
     var useSecureSession = true;
     var dhke = getHeader("Secure-Session-Ex", headers).value;
 
@@ -25,10 +65,6 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
       "GBmodP" : GBmodP
     };
     var response = post(dhke, data);
-    // console.log(response);
-    chrome.storage.local.get("key", function(result) {
-      console.log(result);
-    });
   } else {
     return;
   }

@@ -4,7 +4,7 @@
 	"manifest_version": 2,
 	"content_security_policy": "default-src 'self' 'unsafe-eval' http://localhost",
 	"description": "Make the all web sites secure",
-	"permissions": ["webRequest", "storage", "<all_urls>", "http://*/", "https://*/", "http://localhost/"],
+	"permissions": ["webRequest", "webRequestBlocking", "storage", "<all_urls>"],
 	"background": {
 		"scripts": ["js/jquery-2.0.3.min.js", "js/jssha256.js", "js/base64.js", "js/lib.js", "js/func.js", "js/sesshandler.js"]
 	},

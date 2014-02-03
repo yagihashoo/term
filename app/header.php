@@ -19,3 +19,5 @@ if (!isset($_SESSION["name"])) {
  */
 header("Secure-Session: 1");
 header("Secure-Session-Ex: http://localhost/term/dhke.php");
+
+if(check_signature($_))

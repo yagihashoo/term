@@ -22,7 +22,12 @@ if (!isset($_POST["GBmodP"])) {
   $PG = exec("./dh/msg");
   $PG = explode(",", $PG);
   $_SESSION["R"] = $PG[1];
+  $prm = explode(":", $PG[0]);
+  $prm = $prm[0];
+  $_SESSION["P"] = $prm;
   echo $PG[0];
 } else if(preg_match("/^[0-9]+$/", $_POST["GBmodP"])) {
-  $_SESSION["key"] = exec("./dh/key {$_SESSION['R']} {$_POST['GBmodP']}");
+  $_SESSION["GBmodP"] = $_POST["GBmodP"];
+  $_SESSION["key"] = exec("./dh/key {$_POST['GBmodP']} {$_SESSION['R']} {$_SESSION['P']}");
+  // var_dump($_SESSION);
 }
