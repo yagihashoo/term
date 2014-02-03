@@ -3,3 +3,12 @@
 65771837*18588673
 1222611170602301
 で十分っぽい
+
+ext_http
+50.52ms
+plain_http
+71.66ms
+ext_https
+125.34ms
+plain_https
+137.8ms

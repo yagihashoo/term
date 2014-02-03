@@ -19,7 +19,7 @@ header("Secure-Session-Ex: http://test.yagihashoo.com/term/dhke.php");
 
 if(isset($_SESSION["name"])) {
   header("Location: " . $wd . "/");
-  dir("");
+  die("");
 }
 
 if (isset($_POST["name"]) and !is_array($_POST["name"]) and isset($_POST["password"]) and !is_array($_POST["password"])) {

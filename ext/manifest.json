@@ -2,7 +2,7 @@
 	"name": "Secure Session Manager",
 	"version": "1",
 	"manifest_version": 2,
-	"content_security_policy": "default-src 'self' 'unsafe-eval'; connect-src 'self' http://test.yagihashoo.com",
+	"content_security_policy": "default-src 'self' 'unsafe-eval'; connect-src 'self' http://test.yagihashoo.com https://test.yagihashoo.com",
 	"description": "Make the all web sites secure",
 	"permissions": ["webRequest", "webRequestBlocking", "storage", "<all_urls>"],
 	"background": {
