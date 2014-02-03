@@ -15,10 +15,12 @@ if (!isset($_SESSION["name"])) {
 }
 
 header("Secure-Session: 1");
-header("Secure-Session-Ex: http://localhost/term/dhke.php");
+header("Secure-Session-Ex: http://test.yagihashoo.com/term/dhke.php");
 
-if(isset($_SESSION["name"]))
+if(isset($_SESSION["name"])) {
   header("Location: " . $wd . "/");
+  dir("");
+}
 
 if (isset($_POST["name"]) and !is_array($_POST["name"]) and isset($_POST["password"]) and !is_array($_POST["password"])) {
   $name = $_POST["name"];

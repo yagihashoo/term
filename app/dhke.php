@@ -29,5 +29,5 @@ if (!isset($_POST["GBmodP"])) {
 } else if(preg_match("/^[0-9]+$/", $_POST["GBmodP"])) {
   $_SESSION["GBmodP"] = $_POST["GBmodP"];
   $_SESSION["key"] = exec("./dh/key {$_POST['GBmodP']} {$_SESSION['R']} {$_SESSION['P']}");
-  // var_dump($_SESSION);
+  var_dump($_SESSION);
 }

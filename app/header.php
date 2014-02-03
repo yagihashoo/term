@@ -10,6 +10,7 @@ $wd = dirname($_SERVER["SCRIPT_NAME"]);
 session_start();
 if (!isset($_SESSION["name"])) {
   header("Location: " . $wd . "/login.php");
+  die("");
 } else {
   session_regenerate_id(true);
 }
@@ -18,10 +19,12 @@ if (!isset($_SESSION["name"])) {
  * Secure-session headers
  */
 header("Secure-Session: 1");
-header("Secure-Session-Ex: http://localhost/term/dhke.php");
+header("Secure-Session-Ex: http://test.yagihashoo.com/term/dhke.php");
 
 $headers = array();
-$headers = getallheaders();
-if(isset($headers["Secure-Session-Signature"]) and !check_signature($headers["Secure-Session-Signature"])) {
+$headers = my_getallheaders();
+echo $headers["Secure-Session-Signature"];
+if(!isset($headers["Secure-Session-Signature"]) or !check_signature($headers["Secure-Session-Signature"])) {
   header("Location: ". $wd . "/logout.php");
+  die("");
 }

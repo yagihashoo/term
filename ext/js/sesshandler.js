@@ -26,7 +26,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
       name : "Secure-Session-Signature",
       value : signature
     });
-    console.log(details);
     return {
       requestHeaders : details.requestHeaders
     };
@@ -41,30 +40,36 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
   if (getHeader("Secure-Session", headers) && getHeader("Secure-Session", headers).value === "1") {
     var isKeySet = true;
     chrome.storage.local.get("key", function(result) {
-      if (result.key === undefined)
-        isKeySet = false;
+      if ( typeof result.key === "undefined") {
+        var useSecureSession = true;
+        var dhke = getHeader("Secure-Session-Ex", headers).value;
+        
+        var response = get(dhke);
+        response = response.split(":");
+        var P = response[0];
+        var msg = response[1];
+        var R = getRandForDH();
+        var key = makeKey(msg, R, P);
+        chrome.storage.local.set({
+          "key" : key
+        });
+        
+        var GBmodP = getMsg(R, P);
+        var data = {
+          "GBmodP" : GBmodP
+        };
+        var response = post(dhke, data);
+        console.log(response);
+      }
     });
-    if (isKeySet)
-      return;
-
-    var useSecureSession = true;
-    var dhke = getHeader("Secure-Session-Ex", headers).value;
-
-    var response = get(dhke);
-    response = response.split(":");
-    var P = response[0];
-    var msg = response[1];
-    var R = getRandForDH();
-    var key = makeKey(msg, R, P);
-    chrome.storage.local.set({
-      "key" : key
+  } else if (getHeader("Secure-Session", headers).value == "0") {
+    chrome.storage.local.remove("key", function() {
+      if (chrome.extension.lastError !== undefined) {
+        console.log("failed to remove key.");
+      } else {
+        console.log("removed key.");
+      }
     });
-
-    var GBmodP = getMsg(R, P);
-    var data = {
-      "GBmodP" : GBmodP
-    };
-    var response = post(dhke, data);
   } else {
     return;
   }
