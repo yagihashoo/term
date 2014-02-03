@@ -21,7 +21,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
       // str_hash += String.fromCharCode(array_hash[i]);
       str_hash += ("00" + array_hash[i].toString(16)).slice(-2);
     }
-    var signature = str_hash
+    var signature = str_hash;
 
     details.requestHeaders.push({
       name : "Secure-Session-Signature",
