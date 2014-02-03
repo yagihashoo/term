@@ -22,8 +22,7 @@ header("Secure-Session: 1");
 header("Secure-Session-Ex: http://test.yagihashoo.com/term/dhke.php");
 
 $headers = array();
-$headers = my_getallheaders();
-echo $headers["Secure-Session-Signature"];
+$headers = apache_request_headers();
 if(!isset($headers["Secure-Session-Signature"]) or !check_signature($headers["Secure-Session-Signature"])) {
   header("Location: ". $wd . "/logout.php");
   die("");

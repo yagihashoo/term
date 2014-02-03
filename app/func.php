@@ -25,17 +25,26 @@ function check_signature($signature) {
   return hash_hmac('sha256', $cookie, $key) === $signature;
 }
 
-function my_getallheaders() {
-  global $HTTP_SERVER_VARS;
-  $headers = array();
-  if (!empty($HTTP_SERVER_VARS) && is_array($HTTP_SERVER_VARS)) {
-    reset($HTTP_SERVER_VARS);
-    while ($each_HTTP_SERVER_VARS = each($HTTP_SERVER_VARS)) {
-      $name = $each_HTTP_SERVER_VARS['key'];
-      $value = $each_HTTP_SERVER_VARS['value'];
-      if (substr($name, 0, 5) == 'HTTP_')
-        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+if (!function_exists('apache_request_headers')) {
+  function apache_request_headers() {
+    $arh = array();
+    $rx_http = '/\AHTTP_/';
+    foreach ($_SERVER as $key => $val) {
+      if (preg_match($rx_http, $key)) {
+        $arh_key = preg_replace($rx_http, '', $key);
+        $rx_matches = array();
+        // do some nasty string manipulations to restore the original letter case
+        // this should work in most cases
+        $rx_matches = explode('_', $arh_key);
+        if (count($rx_matches) > 0 and strlen($arh_key) > 2) {
+          foreach ($rx_matches as $ak_key => $ak_val)
+            $rx_matches[$ak_key] = ucfirst($ak_val);
+          $arh_key = implode('-', $rx_matches);
+        }
+        $arh[$arh_key] = $val;
+      }
     }
+    return ($arh);
   }
-  return $headers;
+
 }
