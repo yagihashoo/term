@@ -22,6 +22,6 @@ header("Secure-Session-Ex: http://localhost/term/dhke.php");
 
 $headers = array();
 $headers = getallheaders();
-if(isset($headers["Secure-Session-Signature"]) and !$check_signature($headers["Secure-Session-Signature"])) {
+if(isset($headers["Secure-Session-Signature"]) and !check_signature($headers["Secure-Session-Signature"])) {
   header("Location: ". $wd . "/logout.php");
 }
