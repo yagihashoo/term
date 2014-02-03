@@ -18,14 +18,16 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 
     var str_hash = "";
     for (var i = 0; i < array_hash.length; i++) {
-      str_hash += String.fromCharCode(array_hash[i]);
+      // str_hash += String.fromCharCode(array_hash[i]);
+      str_hash += ("00" + array_hash[i].toString(16)).slice(-2);
     }
-    var signature = Base64.encode(str_hash);
+    var signature = str_hash
 
     details.requestHeaders.push({
       name : "Secure-Session-Signature",
       value : signature
     });
+
     return {
       requestHeaders : details.requestHeaders
     };
@@ -43,7 +45,7 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
       if ( typeof result.key === "undefined") {
         var useSecureSession = true;
         var dhke = getHeader("Secure-Session-Ex", headers).value;
-        
+
         var response = get(dhke);
         response = response.split(":");
         var P = response[0];
@@ -53,13 +55,12 @@ chrome.webRequest.onHeadersReceived.addListener(function(details) {
         chrome.storage.local.set({
           "key" : key
         });
-        
+
         var GBmodP = getMsg(R, P);
         var data = {
           "GBmodP" : GBmodP
         };
         var response = post(dhke, data);
-        console.log(response);
       }
     });
   } else if (getHeader("Secure-Session", headers).value == "0") {

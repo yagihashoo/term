@@ -22,7 +22,6 @@ function check_password($password, $hash) {
 function check_signature($signature) {
   $key = $_SESSION["key"];
   $cookie = $_SERVER["HTTP_COOKIE"];
-  $signature = bin2hex(base64_decode($signature));
   return hash_hmac('sha256', $cookie, $key) === $signature;
 }
 
